@@ -3,12 +3,29 @@ package co.com.client.web;
 import co.com.client.algoritmos.impl.ImplLogica;
 import co.com.client.dto.DtoCliente;
 import co.com.client.dto.DtoLogin;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Scanner;
 
-public class ClientLog {
+@SpringBootApplication
+@EnableAsync
+public class ClientLog extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(ClientLog.class);
+
+    }
 
     public static void main(String[] args) {
+
+        SpringApplication.run(ClientLog.class, args);
 
         ClientLog clienteLog = new ClientLog();
         DtoCliente dtoCliente = new DtoCliente();
