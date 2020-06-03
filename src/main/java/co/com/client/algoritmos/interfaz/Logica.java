@@ -1,7 +1,8 @@
 package co.com.client.algoritmos.interfaz;
 
-import co.com.client.dto.DtoCliente;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface Logica {
 
     //public DtoCliente consultarUsuario (String email);

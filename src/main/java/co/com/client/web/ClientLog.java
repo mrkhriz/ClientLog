@@ -1,73 +1,79 @@
 package co.com.client.web;
 
-import co.com.client.algoritmos.impl.ImplLogica;
+import co.com.client.datos.interfaz.ClientRepository;
 import co.com.client.dto.DtoCliente;
 import co.com.client.dto.DtoLogin;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.scheduling.annotation.EnableAsync;
-
 import java.util.Scanner;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 @EnableAsync
+@EnableJpaRepositories(basePackages = "co.com.client.datos.interfaz")
+@ComponentScan(basePackages = {"co.com.client", "co.com.client.algoritmos.impl"})
+@EntityScan(basePackages = "co.com.client.model")
+@Component
 public class ClientLog extends SpringBootServletInitializer {
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(ClientLog.class);
-
-    }
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(ClientLog.class);
+//
+//    }
 
     public static void main(String[] args) {
-
         SpringApplication.run(ClientLog.class, args);
+    }
 
-        ClientLog clienteLog = new ClientLog();
-        DtoCliente dtoCliente = new DtoCliente();
-        DtoLogin dtoLogin = new DtoLogin();
-        ImplLogica logica = new ImplLogica();
+    @Bean
+    public CommandLineRunner demo(ClientRepository clientRepository) {
+        return (args) -> {
+            clientRepository.findByEmail("tuquis@mariquita.com");
 
-        Scanner reader = new Scanner(System.in);
-        System.out.println(" 1.Consultar cliente \n 2. Crear cliente \n 3. Hacer LogIn");
-        int seleccion = Integer.parseInt(reader.nextLine());
+            DtoCliente dtoCliente = new DtoCliente();
+            DtoLogin dtoLogin = new DtoLogin();
 
-        if (seleccion == 1){
+            Scanner reader = new Scanner(System.in);
+            System.out.println(" 1.Consultar cliente \n 2. Crear cliente \n 3. Hacer LogIn");
+            int seleccion = Integer.parseInt(reader.nextLine());
 
-            System.out.println("Ingresar e-mail:");
-            String email= reader.nextLine();
+            if (seleccion == 1){
+                System.out.println("Ingresar e-mail:");
+                String email= reader.nextLine();
 
-            //dtoCliente = logica.consultarUsuario(email);
+                if (dtoCliente == null || dtoCliente.getId() == 0){
+                    System.out.println("El cliente no existe.");
+                }else {
+//                logicaService.imprimirCliente(dtoCliente);
+                }
 
-            if (dtoCliente == null || dtoCliente.getId() == 0){
-                System.out.println("El cliente no existe.");
-            }else {
-                clienteLog.imprimirCliente(dtoCliente);
+            }else if (seleccion == 2){
+
+                System.out.println("Ingresar nombre:");
+                dtoCliente.setName(reader.nextLine());
+                System.out.println("Ingresar clave:");
+                dtoCliente.setPassword(reader.nextLine());
+                System.out.println("Ingresar e-mail:");
+                dtoCliente.setEmail(reader.nextLine());
+                //System.out.println("Resultado creacion usuario: "+ logica.crearUsuario(dtoCliente));
+
+            }else if (seleccion == 3){
+                System.out.println("Ingresar e-mail:");
+                dtoLogin.setEmail(reader.nextLine());
+                System.out.println("Ingresar clave:");
+                dtoLogin.setPassword(reader.nextLine());
+                //logica.loguearUsuario(dtoLogin);
+
             }
-
-        }else if (seleccion == 2){
-
-            System.out.println("Ingresar nombre:");
-            dtoCliente.setName(reader.nextLine());
-            System.out.println("Ingresar clave:");
-            dtoCliente.setPassword(reader.nextLine());
-            System.out.println("Ingresar e-mail:");
-            dtoCliente.setEmail(reader.nextLine());
-            //System.out.println("Resultado creacion usuario: "+ logica.crearUsuario(dtoCliente));
-
-        }else if (seleccion == 3){
-            System.out.println("Ingresar e-mail:");
-            dtoLogin.setEmail(reader.nextLine());
-            System.out.println("Ingresar clave:");
-            dtoLogin.setPassword(reader.nextLine());
-            //logica.loguearUsuario(dtoLogin);
-
-        }
-
+        };
     }
 
     public void imprimirCliente (DtoCliente dtoCliente){
