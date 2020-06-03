@@ -3,9 +3,14 @@ import co.com.client.HibernateFactory;
 import co.com.client.algoritmos.impl.ImplLogica;
 import co.com.client.dto.DtoCliente;
 import co.com.client.dto.DtoLogin;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Scanner;
 
+@SpringBootApplication
+@EnableAsync
 public class ClientLog {
 
     public static void main(String[] args) {
@@ -42,7 +47,7 @@ public class ClientLog {
             dtoCliente.setPassword(reader.nextLine());
             System.out.println("Ingresar e-mail:");
             dtoCliente.setEmail(reader.nextLine());
-            //System.out.println("Resultado creacion usuario: "+ logica.crearUsuario(dtoCliente));
+            // System.out.println("Resultado creacion usuario: "+ logica.crearUsuario(dtoCliente));
 
         }else if (seleccion == 3){
             System.out.println("Ingresar e-mail:");
